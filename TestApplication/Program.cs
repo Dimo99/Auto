@@ -7,25 +7,28 @@ using Persistance;
 using Persistance.Finders.BrandFinder;
 using Persistance.Finders.CarFinder;
 using Persistance.Finders.ModelFinder;
+using Quartz;
+using Quartz.Impl;
+using Quartz.Spi;
+using Scheduling;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace TestApplication
 {
     class Program
     {
-        static void Main()
+        static async Task Main()
         {
             ILogger logger = GetLogger();
             IServiceCollection serviceCollection = ConfigureServices(logger);
             ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
-            LoadBrands(serviceProvider);
-            LoadModels(serviceProvider);
-            LoadCars(serviceProvider);
+            var quartz = serviceProvider.GetService<QuartzHostedService>();
 
-            InitialCollection.SaveAllBrands(serviceProvider);
-            InitialCollection.SaveAllModels(serviceProvider);
-            InitialCollection.SaveAllCars(serviceProvider);
+            await quartz.StartAsync(new CancellationToken());
 
+            Thread.Sleep(1000000000);
         }
 
         private static void LoadCars(ServiceProvider serviceProvider)
@@ -74,6 +77,16 @@ namespace TestApplication
             services.AddSingleton<ExistingModels>();
             services.AddSingleton<ExistingCars>();
             services.AddSingleton(logger);
+
+            services.AddSingleton<IJobFactory, SingletonJobFactory>();
+            services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+
+            services.AddSingleton<NewDataCollectionJob>();
+            services.AddSingleton(new JobSchedule(
+                jobType: typeof(NewDataCollectionJob),
+                cronExpression: "0 0/15 0 ? * * *")); // run every 15 minutes
+
+            services.AddSingleton<QuartzHostedService>();
 
             return services;
         }

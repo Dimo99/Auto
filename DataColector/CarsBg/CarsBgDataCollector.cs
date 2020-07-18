@@ -33,7 +33,7 @@ namespace DataColector.CarsBg
             this.logger = logger;
         }
 
-        public IEnumerable<Car> GetAllCars(ModelSearchDto model)
+        public IEnumerable<Car> GetAllCars(ModelSearchDto model, bool newCars)
         {
 #if DEBUG
             Directory.CreateDirectory(@"./CarsBg/" + model.BrandName + "/" + model.Name);
@@ -74,6 +74,10 @@ namespace DataColector.CarsBg
                         Car car = GetCar(model, adUrl);
                         results.Add(car);
                     }
+                    else if (newCars)
+                    {
+                        return results;
+                    }
                 }
 
                 carsBgSearchCriteria.Page++;
@@ -83,6 +87,7 @@ namespace DataColector.CarsBg
 
             return results;
         }
+
 
         public IEnumerable<Brand> GetBrands()
         {

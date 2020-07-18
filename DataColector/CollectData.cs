@@ -10,9 +10,9 @@ using Common;
 using System.Threading;
 using Dtos;
 
-namespace TestApplication
+namespace DataColector
 {
-    public class InitialCollection
+    public class CollectData
     {
         public void SaveAllBrands(IServiceProvider serviceProvider)
         {

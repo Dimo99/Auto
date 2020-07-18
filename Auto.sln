@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Collections\Commo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dtos", "Dtos\Dtos.csproj", "{8DF25600-F5F6-4235-86B8-88FEF6FDE6F7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scheduling", "Scheduling\Scheduling.csproj", "{6F0CF53D-C754-4429-8F93-55A05CBC65A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{8DF25600-F5F6-4235-86B8-88FEF6FDE6F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DF25600-F5F6-4235-86B8-88FEF6FDE6F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DF25600-F5F6-4235-86B8-88FEF6FDE6F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F0CF53D-C754-4429-8F93-55A05CBC65A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F0CF53D-C754-4429-8F93-55A05CBC65A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F0CF53D-C754-4429-8F93-55A05CBC65A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F0CF53D-C754-4429-8F93-55A05CBC65A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +73,7 @@ Global
 		{83DAE8E5-7275-40CA-9456-12B064D0FD07} = {46F53111-D1B1-4F90-9042-2F476D5B733B}
 		{35BB62B5-84A2-4F77-AB66-0AC4C8C34432} = {46F53111-D1B1-4F90-9042-2F476D5B733B}
 		{8DF25600-F5F6-4235-86B8-88FEF6FDE6F7} = {46F53111-D1B1-4F90-9042-2F476D5B733B}
+		{6F0CF53D-C754-4429-8F93-55A05CBC65A0} = {46F53111-D1B1-4F90-9042-2F476D5B733B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ABC8FF36-3EDE-4320-9756-33D8B5DAB92F}
