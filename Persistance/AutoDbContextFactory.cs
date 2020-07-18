@@ -41,8 +41,6 @@ namespace Persistance
                 throw new ArgumentException(string.Format(AutoResourceFile.ConnectionStringIsNullOrEmpty, ConnectionStringName), nameof(connectionString));
             }
 
-            Console.WriteLine(string.Format(AutoResourceFile.ConnectionStringCreate, connectionString));
-
             var optionsBuilder = new DbContextOptionsBuilder<AutoDbContext>();
 
             optionsBuilder.UseSqlServer(connectionString);

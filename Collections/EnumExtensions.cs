@@ -16,9 +16,9 @@ namespace Common
         }
 
 
-        public static int Add<T>(this Enum type, T value)
+        public static T Add<T>(this Enum type, T value)
         {
-            return (int)(object)type | (int)(object)value;
+            return (T)(object)((int)(object)type | (int)(object)value);
         }
 
         public static T Remove<T>(this Enum type, T value)

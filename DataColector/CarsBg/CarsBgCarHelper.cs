@@ -3,6 +3,7 @@ using Domain.Entities;
 using Domain.Entities.Enums;
 using Dtos;
 using HtmlAgilityPack;
+using Microsoft.Extensions.Logging;
 using Persistance;
 using ScrapySharp.Network;
 using System;
@@ -40,7 +41,7 @@ namespace DataColector.CarsBg
             int counter = 0;
             while (carPage == null)
             {
-                if(counter == 10)
+                if (counter == 10)
                 {
                     return null;
                 }
@@ -51,24 +52,24 @@ namespace DataColector.CarsBg
                 }
                 catch (IOException)
                 {
-                    Console.WriteLine("Connection failed, retry");
+                    logger.LogWarning("Connection failed, retry");
                 }
                 catch (SocketException)
                 {
-                    Console.WriteLine("Connection failed, retry");
+                    logger.LogWarning("Connection failed, retry");
                 }
                 catch (WebException)
                 {
-                    Console.WriteLine("Timed out, retry");
+                    logger.LogWarning("Timed out, retry");
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("Unknow error during navigation, retry");
+                    logger.LogWarning("Unknow error during navigation, retry");
                 }
             }
-            // Usefull for development purposes
+#if DEBUG
             File.WriteAllText(@"./CarsBg/" + model.BrandName.Trim() + "/" + model.Name.Trim() + "/" + adUrl.Substring(25) + ".html", carPage.Content);
-
+#endif
             HtmlNode pageNode = carPage.Html;
 
             Car car = new Car();
@@ -92,7 +93,7 @@ namespace DataColector.CarsBg
             return car;
         }
 
-        private static void AssignProperty(Car car, string propertyName, string nodeInnerText)
+        private void AssignProperty(Car car, string propertyName, string nodeInnerText)
         {
             switch (propertyName)
             {
@@ -111,7 +112,7 @@ namespace DataColector.CarsBg
                     }
                     catch (OverflowException)
                     {
-                        Console.WriteLine(car.AdUrl + " Millage overflow exception");
+                        logger.LogWarning(car.AdUrl + " Millage overflow exception");
                     }
                     break;
 
@@ -131,7 +132,7 @@ namespace DataColector.CarsBg
                     }
                     catch (OverflowException)
                     {
-                        Console.WriteLine(car.AdUrl + " Power overflow exception");
+                        logger.LogWarning(car.AdUrl + " Power overflow exception");
                     }
                     break;
 
@@ -143,7 +144,7 @@ namespace DataColector.CarsBg
                     }
                     catch (OverflowException)
                     {
-                        Console.WriteLine(car.AdUrl + " EngineDisplacement overflow exception");
+                        logger.LogWarning(car.AdUrl + " EngineDisplacement overflow exception");
                     }
                     break;
 
@@ -187,77 +188,77 @@ namespace DataColector.CarsBg
         {
             if (otherInfo.Contains("7 места (6+1)"))
             {
-                car.OtherInfo.Add(OtherInfo.SevenPlaces);
+                car.OtherInfo = car.OtherInfo.Add(OtherInfo.SevenPlaces);
             }
 
             if (otherInfo.Contains("TAXI"))
             {
-                car.OtherInfo.Add(OtherInfo.TAXI);
+                car.OtherInfo = car.OtherInfo.Add(OtherInfo.TAXI);
             }
 
             if (otherInfo.Contains("Автопилот"))
             {
-                car.OtherInfo.Add(OtherInfo.AutoPilot);
+                car.OtherInfo = car.OtherInfo.Add(OtherInfo.AutoPilot);
             }
 
             if (otherInfo.Contains("Бордови компютър"))
             {
-                car.OtherInfo.Add(OtherInfo.BoardComputer);
+                car.OtherInfo = car.OtherInfo.Add(OtherInfo.BoardComputer);
             }
 
             if (otherInfo.Contains("Гаранция"))
             {
-                car.OtherInfo.Add(OtherInfo.Warranty);
+                car.OtherInfo = car.OtherInfo.Add(OtherInfo.Warranty);
             }
 
             if (otherInfo.Contains("Десен волан"))
             {
-                car.OtherInfo.Add(OtherInfo.RightHandDrive);
+                car.OtherInfo = car.OtherInfo.Add(OtherInfo.RightHandDrive);
             }
 
             if (otherInfo.Contains("Навигационна система"))
             {
-                car.OtherInfo.Add(OtherInfo.NavigationSystem);
+                car.OtherInfo = car.OtherInfo.Add(OtherInfo.NavigationSystem);
             }
 
             if (otherInfo.Contains("Панорамен покрив"))
             {
-                car.OtherInfo.Add(OtherInfo.PanoramicRoof);
+                car.OtherInfo = car.OtherInfo.Add(OtherInfo.PanoramicRoof);
             }
 
             if (otherInfo.Contains("Ретро"))
             {
-                car.OtherInfo.Add(OtherInfo.Retro);
+                car.OtherInfo = car.OtherInfo.Add(OtherInfo.Retro);
             }
 
             if (otherInfo.Contains("Сервизна книжка"))
             {
-                car.OtherInfo.Add(OtherInfo.ServiceBook);
+                car.OtherInfo = car.OtherInfo.Add(OtherInfo.ServiceBook);
             }
 
             if (otherInfo.Contains("Серво управление"))
             {
-                car.OtherInfo.Add(OtherInfo.PowerSteering);
+                car.OtherInfo = car.OtherInfo.Add(OtherInfo.PowerSteering);
             }
 
             if (otherInfo.Contains("Теглич"))
             {
-                car.OtherInfo.Add(OtherInfo.Towbar);
+                car.OtherInfo = car.OtherInfo.Add(OtherInfo.Towbar);
             }
 
             if (otherInfo.Contains("Типтроник/Мултитроник"))
             {
-                car.OtherInfo.Add(OtherInfo.Multitronic);
+                car.OtherInfo = car.OtherInfo.Add(OtherInfo.Multitronic);
             }
 
             if (otherInfo.Contains("Тунинг"))
             {
-                car.OtherInfo.Add(OtherInfo.Tunning);
+                car.OtherInfo = car.OtherInfo.Add(OtherInfo.Tunning);
             }
 
             if (otherInfo.Contains("Хладилен"))
             {
-                car.OtherInfo.Add(OtherInfo.Refrigeration);
+                car.OtherInfo = car.OtherInfo.Add(OtherInfo.Refrigeration);
             }
 
             car.OtherInfoString = otherInfo;
@@ -267,77 +268,77 @@ namespace DataColector.CarsBg
         {
             if (carSafetyInfo.Contains("4x4"))
             {
-                car.SafetyInfo.Add(Safety.FourXFour);
+                car.SafetyInfo = car.SafetyInfo.Add(Safety.FourXFour);
             }
 
             if (carSafetyInfo.Contains("ABS"))
             {
-                car.SafetyInfo.Add(Safety.ABS);
+                car.SafetyInfo = car.SafetyInfo.Add(Safety.ABS);
             }
 
             if (carSafetyInfo.Contains("Airbag"))
             {
-                car.SafetyInfo.Add(Safety.Airbag);
+                car.SafetyInfo = car.SafetyInfo.Add(Safety.Airbag);
             }
 
             if (carSafetyInfo.Contains("ASR/Тракшън контрол"))
             {
-                car.SafetyInfo.Add(Safety.ASR);
+                car.SafetyInfo = car.SafetyInfo.Add(Safety.ASR);
             }
 
             if (carSafetyInfo.Contains("ESP"))
             {
-                car.SafetyInfo.Add(Safety.ESP);
+                car.SafetyInfo = car.SafetyInfo.Add(Safety.ESP);
             }
 
             if (carSafetyInfo.Contains("Аларма"))
             {
-                car.SafetyInfo.Add(Safety.Alarm);
+                car.SafetyInfo = car.SafetyInfo.Add(Safety.Alarm);
             }
 
             if (carSafetyInfo.Contains("Безключово палене"))
             {
-                car.SafetyInfo.Add(Safety.KeylessIgnition);
+                car.SafetyInfo = car.SafetyInfo.Add(Safety.KeylessIgnition);
             }
 
             if (carSafetyInfo.Contains("Брониран"))
             {
-                car.SafetyInfo.Add(Safety.Armored);
+                car.SafetyInfo = car.SafetyInfo.Add(Safety.Armored);
             }
 
             if (carSafetyInfo.Contains("Застраховка"))
             {
-                car.SafetyInfo.Add(Safety.Insurance);
+                car.SafetyInfo = car.SafetyInfo.Add(Safety.Insurance);
             }
 
             if (carSafetyInfo.Contains("Имобилайзер"))
             {
-                car.SafetyInfo.Add(Safety.Immobilizer);
+                car.SafetyInfo = car.SafetyInfo.Add(Safety.Immobilizer);
             }
 
             if (carSafetyInfo.Contains("Ксенонови фарове"))
             {
-                car.SafetyInfo.Add(Safety.XenonLights);
+                car.SafetyInfo = car.SafetyInfo.Add(Safety.XenonLights);
             }
 
             if (carSafetyInfo.Contains("Парктроник"))
             {
-                car.SafetyInfo.Add(Safety.Parktronic);
+                car.SafetyInfo = car.SafetyInfo.Add(Safety.Parktronic);
             }
 
             if (carSafetyInfo.Contains("Старт-Стоп система"))
             {
-                car.SafetyInfo.Add(Safety.StartStopSystem);
+                car.SafetyInfo = car.SafetyInfo.Add(Safety.StartStopSystem);
             }
 
             if (carSafetyInfo.Contains("Халогенни фарове"))
             {
-                car.SafetyInfo.Add(Safety.HalogenLights);
+                car.SafetyInfo = car.SafetyInfo.Add(Safety.HalogenLights);
             }
 
             if (carSafetyInfo.Contains("Центр. заключване"))
             {
-                car.SafetyInfo.Add(Safety.CentralLocking);
+                car.SafetyInfo = car.SafetyInfo.Add(Safety.CentralLocking);
             }
 
             car.SafetyInfoString = carSafetyInfo;
@@ -347,62 +348,62 @@ namespace DataColector.CarsBg
         {
             if (carComfortInfo.Contains("DVD/TV"))
             {
-                car.ComfortInfo |= Comfort.DVDTV;
+                car.ComfortInfo = car.ComfortInfo.Add(Comfort.DVDTV);
             }
 
             if (carComfortInfo.Contains("Алуминиеви джанти"))
             {
-                car.ComfortInfo.Add(Comfort.AlloyWheels);
+                car.ComfortInfo = car.ComfortInfo.Add(Comfort.AlloyWheels);
             }
 
             if (carComfortInfo.Contains("Ел.огледала"))
             {
-                car.ComfortInfo.Add(Comfort.ElMirrors);
+                car.ComfortInfo = car.ComfortInfo.Add(Comfort.ElMirrors);
             }
 
             if (carComfortInfo.Contains("Ел.седалки"))
             {
-                car.ComfortInfo.Add(Comfort.ElSeats);
+                car.ComfortInfo = car.ComfortInfo.Add(Comfort.ElSeats);
             }
 
             if (carComfortInfo.Contains("Ел.стъкла"))
             {
-                car.ComfortInfo.Add(Comfort.ElWindows);
+                car.ComfortInfo = car.ComfortInfo.Add(Comfort.ElWindows);
             }
 
             if (carComfortInfo.Contains("Климатик"))
             {
-                car.ComfortInfo.Add(Comfort.AirConditioner);
+                car.ComfortInfo = car.ComfortInfo.Add(Comfort.AirConditioner);
             }
 
             if (carComfortInfo.Contains("Климатроник"))
             {
-                car.ComfortInfo.Add(Comfort.Climatronic);
+                car.ComfortInfo = car.ComfortInfo.Add(Comfort.Climatronic);
             }
 
             if (carComfortInfo.Contains("Кожен салон"))
             {
-                car.ComfortInfo.Add(Comfort.LeatherInterior);
+                car.ComfortInfo = car.ComfortInfo.Add(Comfort.LeatherInterior);
             }
 
             if (carComfortInfo.Contains("Мултифункционален волан"))
             {
-                car.ComfortInfo.Add(Comfort.MultifunctionSteeringWheel);
+                car.ComfortInfo = car.ComfortInfo.Add(Comfort.MultifunctionSteeringWheel);
             }
 
             if (carComfortInfo.Contains("Подгряване на седалки"))
             {
-                car.ComfortInfo.Add(Comfort.SeatHeating);
+                car.ComfortInfo = car.ComfortInfo.Add(Comfort.SeatHeating);
             }
 
             if (carComfortInfo.Contains("Стерео уредба"))
             {
-                car.ComfortInfo.Add(Comfort.Stereo);
+                car.ComfortInfo = car.ComfortInfo.Add(Comfort.Stereo);
             }
 
             if (carComfortInfo.Contains("Шибедах"))
             {
-                car.ComfortInfo.Add(Comfort.Shibedah);
+                car.ComfortInfo = car.ComfortInfo.Add(Comfort.Shibedah);
             }
 
             car.ComfortInfoString = carComfortInfo;

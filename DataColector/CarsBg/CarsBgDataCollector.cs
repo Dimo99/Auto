@@ -1,6 +1,7 @@
 ﻿using Domain.Entities;
 using Dtos;
 using HtmlAgilityPack;
+using Microsoft.Extensions.Logging;
 using Persistance;
 using ScrapySharp.Extensions;
 using ScrapySharp.Network;
@@ -17,17 +18,19 @@ namespace DataColector.CarsBg
         private const string SearchPage = "https://www.cars.bg/?go=cars&search=1&advanced=1&fromhomeu=1&publishedTime=0&filterOrderBy=1&showPrice=0&autotype=1&stateId=1&section=cars&categoryId=0&doorId=0&brandId=0&modelId=0&fuelId=0&gearId=0&yearFrom=&yearTo=&priceFrom=&priceTo=&currencyId=1&man_priceFrom=0&man_priceTo=0&man_currencyId=1&powerFrom=&powerTo=&steering_weel=0&colorId=0&is_carinbg=0&location=&locationId=0&radius=1&offersForD=1&offersForA=1";
 
         private ScrapingBrowser browser;
+        private ILogger logger;
         private ExistingCars existingCars;
         private ExistingBrands existingBrands;
         private ExistingModels existingModels;
 
-        public CarsBgDataCollector(ExistingBrands existingBrands, ExistingModels existingModels, ExistingCars existingCars)
+        public CarsBgDataCollector(ExistingBrands existingBrands, ExistingModels existingModels, ExistingCars existingCars, ILogger logger)
         {
             this.browser = new ScrapingBrowser();
             this.browser.Encoding = Encoding.UTF8;
             this.existingBrands = existingBrands;
             this.existingModels = existingModels;
             this.existingCars = existingCars;
+            this.logger = logger;
         }
 
         public IEnumerable<Car> GetAllCars(ModelSearchDto model)
@@ -39,7 +42,7 @@ namespace DataColector.CarsBg
             carsBgSearchCriteria.AddModel(model);
 
             var results = new List<Car>();
-            Console.WriteLine("Exploring" + model.BrandName + " " + model.Name);
+            logger.LogDebug("Exploring" + model.BrandName + " " + model.Name);
 
             while (true)
             {
@@ -67,14 +70,14 @@ namespace DataColector.CarsBg
 
                     if (!existingCars.Contains(adUrl) && existingCars.Add(adUrl))
                     {
-                        Console.WriteLine(adUrl);
+                        logger.LogDebug("Processing:" + adUrl);
                         Car car = GetCar(model, adUrl);
                         results.Add(car);
                     }
                 }
 
                 carsBgSearchCriteria.Page++;
-                Console.WriteLine("Exploring page number:" + carsBgSearchCriteria.Page);
+                logger.LogDebug("Exploring page number:" + carsBgSearchCriteria.Page);
 
             }
 
