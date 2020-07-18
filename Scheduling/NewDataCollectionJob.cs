@@ -1,9 +1,6 @@
-﻿using Common;
-using DataColector;
+﻿using DataColector;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Persistance;
-using Persistance.Migrations;
 using Quartz;
 using System;
 using System.Threading.Tasks;
@@ -23,6 +20,7 @@ namespace Scheduling
 
         public Task Execute(IJobExecutionContext context)
         {
+            logger.LogDebug("Starting new job");
             using (IServiceScope scope = serviceProvider.CreateScope())
             {
                 scope.ServiceProvider.GetService<CollectData>().SaveNewCars(scope.ServiceProvider);

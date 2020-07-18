@@ -1,5 +1,4 @@
-﻿using DataColector;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Persistance;
 using Persistance.Finders.BrandFinder;

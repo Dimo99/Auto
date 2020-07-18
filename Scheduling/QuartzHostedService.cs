@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -61,8 +60,7 @@ namespace Scheduling
             return TriggerBuilder
                 .Create()
                 .WithIdentity($"{schedule.JobType.FullName}.trigger")
-                .WithCronSchedule(schedule.CronExpression)
-                .WithDescription(schedule.CronExpression)
+                .WithSimpleSchedule(x => x.WithIntervalInMinutes(schedule.Minutes).RepeatForever())
                 .Build();
         }
     }

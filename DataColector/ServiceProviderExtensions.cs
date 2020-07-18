@@ -1,5 +1,4 @@
-﻿using DataColector;
-using Persistance;
+﻿using Persistance;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 

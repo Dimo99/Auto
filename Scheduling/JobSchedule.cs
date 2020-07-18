@@ -4,13 +4,13 @@ namespace Scheduling
 {
     public class JobSchedule
     {
-        public JobSchedule(Type jobType, string cronExpression)
+        public JobSchedule(Type jobType, int minutes)
         {
             JobType = jobType;
-            CronExpression = cronExpression;
+            Minutes = minutes;
         }
 
         public Type JobType { get; }
-        public string CronExpression { get; }
+        public int Minutes { get; }
     }
 }

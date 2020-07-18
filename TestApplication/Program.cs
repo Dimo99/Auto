@@ -24,6 +24,10 @@ namespace TestApplication
             IServiceCollection serviceCollection = ConfigureServices(logger);
             ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
+            LoadBrands(serviceProvider);
+            LoadModels(serviceProvider);
+            LoadCars(serviceProvider);
+
             var quartz = serviceProvider.GetService<QuartzHostedService>();
 
             await quartz.StartAsync(new CancellationToken());
@@ -84,9 +88,10 @@ namespace TestApplication
             services.AddSingleton<NewDataCollectionJob>();
             services.AddSingleton(new JobSchedule(
                 jobType: typeof(NewDataCollectionJob),
-                cronExpression: "0 0/15 0 ? * * *")); // run every 15 minutes
+                minutes: 15));
 
             services.AddSingleton<QuartzHostedService>();
+            services.AddSingleton<CollectData>();
 
             return services;
         }
