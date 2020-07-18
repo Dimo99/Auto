@@ -15,12 +15,6 @@ namespace Persistance.Finders.BrandFinder
             this.dbContext = autoDbContext;
         }
 
-        public bool ExistsCaseInsensitive(string name)
-        {
-            return dbContext.Brands.Any(b => b.Name.ToLower() == name.ToLower());
-        }
-
-
         public IEnumerable<Brand> FilterNonExistingBrands(IEnumerable<Brand> brands)
         {
             ImmutableHashSet<string> brandNames = dbContext.Brands.Select(b => b.Name.ToLower()).ToImmutableHashSet();
@@ -30,7 +24,7 @@ namespace Persistance.Finders.BrandFinder
                          .Where(b => !brandNames.Contains(b.Name.ToLower()));
         }
 
-        public List<BrandSearchDto> GetAll(SourceEnum source)
+        public List<BrandSearchDto> GetBrandSearchDtos(SourceEnum source)
         {
             return dbContext.Brands
                     .Select(b => new BrandSearchDto
@@ -38,12 +32,13 @@ namespace Persistance.Finders.BrandFinder
                         Id = b.Id,
                         BrandKey = b.BrandKeys.Single(bk => bk.SourceId == (int)source).Key
                     })
+                    .OrderBy(b => b.Id)
                     .ToList();
         }
 
-        public List<string> GetBrands()
+        public List<string> GetBrandNames()
         {
-            return dbContext.Brands.Select(b => b.Name).ToList();
+            return dbContext.Brands.OrderBy(b => b.Id).Select(b => b.Name).ToList();
         }
     }
 }

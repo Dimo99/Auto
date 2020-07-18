@@ -1,5 +1,6 @@
 ﻿using DataColector;
 using DataColector.CarsBg;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -11,6 +12,8 @@ using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
 using Scheduling;
+using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,11 +31,31 @@ namespace TestApplication
             LoadModels(serviceProvider);
             LoadCars(serviceProvider);
 
-            var quartz = serviceProvider.GetService<QuartzHostedService>();
+            SeedDb(serviceProvider);
+
+            CollectData collectData = serviceProvider.GetService<CollectData>();
+
+            collectData.SaveAllBrands(serviceProvider);
+            collectData.SaveAllModels(serviceProvider);
+
+            QuartzHostedService quartz = serviceProvider.GetService<QuartzHostedService>();
 
             await quartz.StartAsync(new CancellationToken());
 
             Thread.Sleep(1000000000);
+        }
+
+        private static void SeedDb(ServiceProvider serviceProvider)
+        {
+            AutoDbContext dbContext = serviceProvider.GetService<AutoDbContext>();
+            if (!dbContext.Sources.Any())
+            {
+                dbContext.Sources.Add(new Source
+                {
+                    Id = 1,
+                    Name = "Cars.bg",
+                });
+            }
         }
 
         private static void LoadCars(ServiceProvider serviceProvider)
@@ -53,7 +76,7 @@ namespace TestApplication
         {
             ExistingBrands existingBrands = serviceProvider.GetService<ExistingBrands>();
             BrandFinder brandFinder = serviceProvider.GetService<BrandFinder>();
-            existingBrands.Load(brandFinder.GetBrands());
+            existingBrands.Load(brandFinder.GetBrandNames());
         }
 
         private static ILogger GetLogger()

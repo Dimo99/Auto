@@ -49,7 +49,7 @@ namespace DataColector
 
         private void SaveAllModelsForSource(IServiceProvider serviceProvider, SourceEnum source)
         {
-            List<BrandSearchDto> brandsSearch = serviceProvider.GetService<BrandFinder>().GetAll(source);
+            List<BrandSearchDto> brandsSearch = serviceProvider.GetService<BrandFinder>().GetBrandSearchDtos(source);
             AutoDbContext dbContext = serviceProvider.GetService<AutoDbContext>();
 
             foreach (BrandSearchDto brandSearch in brandsSearch)
