@@ -61,6 +61,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This brand is not configured for {0}..
+        /// </summary>
+        public static string BrandNotConfiguredFor {
+            get {
+                return ResourceManager.GetString("BrandNotConfiguredFor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to AutoDbContextFactory.Create(string): Connection string: &apos;{0}&apos;..
         /// </summary>
         public static string ConnectionStringCreate {
@@ -75,6 +84,24 @@ namespace Resources {
         public static string ConnectionStringIsNullOrEmpty {
             get {
                 return ResourceManager.GetString("ConnectionStringIsNullOrEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Currenty only cars search is supported.
+        /// </summary>
+        public static string CurrentlyOnlyCarsSearchIsSupported {
+            get {
+                return ResourceManager.GetString("CurrentlyOnlyCarsSearchIsSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only models under the same brand can be used for search criteria..
+        /// </summary>
+        public static string OnlyModelsUnderTheSameBrandCanBeUsedForSearchCriteria {
+            get {
+                return ResourceManager.GetString("OnlyModelsUnderTheSameBrandCanBeUsedForSearchCriteria", resourceCulture);
             }
         }
     }

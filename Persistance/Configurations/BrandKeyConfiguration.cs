@@ -8,7 +8,7 @@ namespace Persistance.Configurations
     {
         public void Configure(EntityTypeBuilder<BrandKey> builder)
         {
-            builder.ToTable("tBrandSource");
+            builder.ToTable("tBrandKey");
 
             builder
                 .HasKey(bk => new { bk.BrandId, bk.SourceId })

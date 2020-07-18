@@ -1,12 +1,11 @@
 ﻿namespace Domain.Entities.Enums
 {
-    public enum Engine
+    public enum FuelType
     {
-        Gasoline,
+        Petrol,
         Diesel,
         GasPetrol,
-        Gas,
-        Methane,
+        MethanePetrol,
         Electric,
         Hybrid
     }

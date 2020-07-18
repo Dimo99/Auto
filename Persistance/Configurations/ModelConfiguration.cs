@@ -31,13 +31,13 @@ namespace Persistance.Configurations
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder
-                .Property(m => m.ModelId)
+                .Property(m => m.ParentModelId)
                 .HasColumnName("Sk_ModelId");
 
             builder
-                .HasOne(m => m.SeriesModel)
+                .HasOne(m => m.ParentModel)
                 .WithMany(m => m.SubModels)
-                .HasForeignKey(m => m.ModelId)
+                .HasForeignKey(m => m.ParentModelId)
                 .HasPrincipalKey(m => m.Id)
                 .HasConstraintName("Sk_SeriesModel")
                 .OnDelete(DeleteBehavior.NoAction);

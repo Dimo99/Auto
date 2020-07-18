@@ -19,18 +19,6 @@ namespace Persistance.Configurations
                 .UseIdentityColumn(1, 1);
 
             builder
-                .Property(c => c.BrandId)
-                .HasColumnName("Fk_BrandId");
-
-            builder
-                .HasOne(c => c.Brand)
-                .WithMany(b => b.Cars)
-                .HasForeignKey(c => c.BrandId)
-                .HasPrincipalKey(b => b.Id)
-                .HasConstraintName("Fk_Car_Brand")
-                .OnDelete(DeleteBehavior.NoAction);
-
-            builder
                 .Property(c => c.ModelId)
                 .HasColumnName("Fk_ModelId");
 
@@ -56,23 +44,21 @@ namespace Persistance.Configurations
 
             builder
                 .HasIndex(c => c.AdUrl)
+
                 .IsUnique()
                 .HasName("UnIndx_AdUrl");
 
             builder
-                .HasOne(c => c.MainInfo)
-                .WithOne()
-                .HasForeignKey<CarMainInfo>(c => c.Id);
+                .Property(c => c.ComfortInfo)
+                .HasConversion<int>();
 
             builder
-                .HasOne(c => c.Comfort)
-                .WithOne()
-                .HasForeignKey<CarComfort>(c => c.Id);
+                .Property(c => c.SafetyInfo)
+                .HasConversion<int>();
 
             builder
-                .HasOne(c => c.Safety)
-                .WithOne()
-                .HasForeignKey<CarSafety>(c => c.Id);
+                .Property(c => c.OtherInfo)
+                .HasConversion<int>();
         }
     }
 }

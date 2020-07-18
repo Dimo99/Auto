@@ -17,6 +17,11 @@ namespace Persistance.Configurations
             builder
                 .Property(b => b.Id)
                 .UseIdentityColumn(1, 1);
+
+            builder
+                .HasIndex(b => b.Name)
+                .IsUnique()
+                .HasName("Uq_Indx_Brand_Name");
         }
     }
 }

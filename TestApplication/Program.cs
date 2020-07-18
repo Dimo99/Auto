@@ -1,6 +1,12 @@
-﻿using Domain.Entities;
+﻿using DataColector;
+using DataColector.CarsBg;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Persistance;
+using Persistance.Finders.BrandFinder;
+using Persistance.Finders.CarFinder;
+using Persistance.Finders.ModelFinder;
+
 
 namespace TestApplication
 {
@@ -8,21 +14,43 @@ namespace TestApplication
     {
         static void Main()
         {
-            DbContextOptionsBuilder<AutoDbContext> optionsBuilder = new DbContextOptionsBuilder<AutoDbContext>();
+            IServiceCollection servicesCollection = new ServiceCollection();
 
-            optionsBuilder
-                .UseSqlServer(@"Server=DESKTOP-8AUT35O\SQL19;Database=AutoDatabase;User Id=sa;Password=root;",
-                options => options.EnableRetryOnFailure());
+            Configure(servicesCollection);
 
-            using (var dbContext = new AutoDbContext(optionsBuilder.Options))
-            {
-                dbContext.Sources.Add(new Source
-                {
-                    Name = "123"
-                });
+            ServiceProvider serviceProvider = servicesCollection.BuildServiceProvider();
 
-                dbContext.SaveChanges();
-            }
+            ExistingBrands existingBrands = serviceProvider.GetService<ExistingBrands>();
+            ExistingModels existingModels = serviceProvider.GetService<ExistingModels>();
+            ExistingCars existingCars = serviceProvider.GetService<ExistingCars>();
+            CarFinder carFinder = serviceProvider.GetService<CarFinder>();
+            BrandFinder brandFinder = serviceProvider.GetService<BrandFinder>();
+            ModelFinder modelFinder = serviceProvider.GetService<ModelFinder>();
+
+            existingBrands.Load(brandFinder.GetBrands());
+            existingModels.Load(modelFinder.GetModels());
+            existingCars.Load(carFinder.GetAddUrls());
+
+            InitialCollection.SaveAllBrands(serviceProvider);
+            InitialCollection.SaveAllModels(serviceProvider);
+            InitialCollection.SaveAllCars(serviceProvider);
+        }
+
+        public static void Configure(IServiceCollection services)
+        {
+            services.AddDbContext<AutoDbContext>(
+                options =>
+                options
+                .UseSqlServer(@"Server=DESKTOP-8AUT35O\SQL19;Database=AutoDatabase;User Id=sa;Password=root;"));
+
+            services.AddScoped<BrandFinder>();
+            services.AddScoped<ModelFinder>();
+            services.AddScoped<CarFinder>();
+            services.AddScoped<CarsBgDataCollector>();
+            services.AddScoped<DataCollectorFactory>();
+            services.AddSingleton<ExistingBrands>();
+            services.AddSingleton<ExistingModels>();
+            services.AddSingleton<ExistingCars>();
         }
     }
 }
